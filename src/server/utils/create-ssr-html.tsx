@@ -30,22 +30,33 @@ export async function createSsrHtml(
   );
 
   if (!appleTouchIcon) {
-    appleTouchIcon = site?.site_view.site.icon
-      ? `data:image/png;base64,${await sharp(
-          await fetchIconPng(site.site_view.site.icon)
-        )
-          .resize(180, 180)
-          .extend({
-            bottom: 20,
-            top: 20,
-            left: 20,
-            right: 20,
-            background: "#222222",
-          })
-          .png()
-          .toBuffer()
-          .then(buf => buf.toString("base64"))}`
-      : favIconPngUrl;
+    try {
+      appleTouchIcon = site?.site_view.site.icon
+        ? `data:image/png;base64,${await sharp(
+            await fetchIconPng(site.site_view.site.icon)
+          )
+            .resize(180, 180)
+            .extend({
+              bottom: 20,
+              top: 20,
+              left: 20,
+              right: 20,
+              background: "#222222",
+            })
+            .png()
+            .toBuffer()
+            .then(buf => buf.toString("base64"))}`
+        : favIconPngUrl;
+    } catch (err) {
+      console.error(err);
+      console.error(
+        "error resizing apple touch icon",
+        180,
+        site?.site_view.site.name,
+        site?.site_view.site.name,
+        err
+      );
+    }
   }
 
   const erudaStr =

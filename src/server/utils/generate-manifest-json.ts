@@ -38,11 +38,21 @@ export default async function ({
         ).then(buf => buf.toString("base64"));
 
         if (icon) {
-          src = await sharp(icon)
-            .resize(size, size)
-            .png()
-            .toBuffer()
-            .then(buf => buf.toString("base64"));
+          try {
+            src = await sharp(icon)
+              .resize(size, size)
+              .png()
+              .toBuffer()
+              .then(buf => buf.toString("base64"));
+          } catch (err) {
+            console.error(
+              "error with resizing manifest icon: ",
+              size,
+              site.icon,
+              site.name,
+              err
+            );
+          }
         }
 
         return {
